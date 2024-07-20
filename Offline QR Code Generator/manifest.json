@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Offline QR Code Generator",
+  "version": "0.1",
+  "description": "Generate and save QR codes with various data types",
+  "permissions": ["activeTab", "downloads"],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "icons": {
+    "16": "favicon.png",
+    "48": "favicon.png",
+    "128": "favicon.png"
+  },
+  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'"
+}
