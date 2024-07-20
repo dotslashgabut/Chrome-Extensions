@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
       case 'text':
         return getValue('inputData').trim() !== '';
       case 'url':
-        return /^(https?:\/\/)?([\w.-]+)(:\d+)?([\/\w \.-]*)*\/?$/.test(getValue('inputData'));
+        return /^(https?:\/\/)?([\w.-]+)(:\d+)?([\w\d\s\/\-._~:\/?#[\]@!$&'()*+,;=]*)$/.test(decodeURIComponent(getValue('inputData')));
       case 'email':
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(getValue('inputData'));
       case 'phone':
