@@ -1,5 +1,5 @@
 {
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "Offline QR Code Generator",
   "version": "0.1",
   "description": "Generate and save QR codes with various data types",
