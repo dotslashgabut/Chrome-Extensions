@@ -4,7 +4,7 @@
   "version": "0.1",
   "description": "Generate and save QR codes with various data types",
   "permissions": ["activeTab", "downloads"],
-  "browser_action": {
+  "action": {
     "default_popup": "popup.html"
   },
   "icons": {
@@ -12,5 +12,7 @@
     "48": "favicon.png",
     "128": "favicon.png"
   },
-  "content_security_policy": "script-src 'self' https://cdnjs.cloudflare.com; object-src 'self'"
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
 }
