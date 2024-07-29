@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const qrcodeDiv = document.getElementById('qrcode');
   const qrPreview = document.getElementById('qrPreview');
   const savePNGButton = document.getElementById('savePNG');
+  const saveSVGButton = document.getElementById('saveSVG');
 
   let qr = null;
 
@@ -121,6 +122,40 @@ END:VCARD`;
       });
     };
   });
+
+  saveSVGButton.addEventListener('click', function() {
+    if (!qr) return;
+    const svg = generateQRCodeSVG(qr._oQRCode.modules);
+    const blob = new Blob([svg], {type: 'image/svg+xml'});
+    const url = URL.createObjectURL(blob);
+    chrome.downloads.download({
+      url: url,
+      filename: 'qrcode.svg'
+    });
+  });
+
+  function generateQRCodeSVG(modules) {
+    const moduleCount = modules.length;
+    const cellSize = 4; // Adjust this value to change the size of the QR code
+    const margin = 16; // Adjust this value to change the margin around the QR code
+    const size = moduleCount * cellSize + 2 * margin;
+
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <rect width="100%" height="100%" fill="white"/>`;
+
+    for (let row = 0; row < moduleCount; row++) {
+      for (let col = 0; col < moduleCount; col++) {
+        if (modules[row][col]) {
+          const x = col * cellSize + margin;
+          const y = row * cellSize + margin;
+          svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="black"/>`;
+        }
+      }
+    }
+
+    svg += '</svg>';
+    return svg;
+  }
 
   updateInputFields();
 });
