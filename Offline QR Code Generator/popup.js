@@ -92,8 +92,8 @@ END:VCARD`;
     qrcodeDiv.innerHTML = '';
     qr = new QRCode(qrcodeDiv, {
       text: qrData,
-      width: 156,
-      height: 156,
+      width: 512,
+      height: 512,
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
