@@ -90,72 +90,54 @@ END:VCARD`;
     const qrData = getQRData(dataType);
 
     qrcodeDiv.innerHTML = '';
-    qr = new QRCode(qrcodeDiv, {
-      text: qrData,
-      width: 512,
-      height: 512,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
-    });
+    qr = qrcode(0, 'H');
+    qr.addData(qrData);
+    qr.make();
+    
+    const cellSize = Math.floor((qrcodeDiv.offsetWidth - 20) / qr.getModuleCount());
+qrcodeDiv.innerHTML = qr.createImgTag(cellSize);
+    
+    qrcodeDiv.innerHTML = qr.createImgTag(3);
 
     qrPreview.style.display = 'block';
   });
 
-  savePNGButton.addEventListener('click', function() {
-    if (!qr) return;
-    const img = new Image();
-    img.src = qrcodeDiv.querySelector('img').src;
-    img.onload = function() {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const borderSize = 10; // Adjust the border size as needed
-      canvas.width = img.width + 2 * borderSize;
-      canvas.height = img.height + 2 * borderSize;
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, borderSize, borderSize);
-      const dataUrl = canvas.toDataURL('image/png');
-      chrome.downloads.download({
-        url: dataUrl,
-        filename: 'qrcode.png'
-      });
-    };
-  });
+savePNGButton.addEventListener('click', function() {
+  if (!qr) return;
+  const svgString = qr.createSvgTag(5);
+  const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+  const svgUrl = URL.createObjectURL(svgBlob);
+  
+  const img = new Image();
+  img.onload = function() {
+    const canvas = document.createElement('canvas');
+    const size = img.width;
+    const borderSize = Math.floor(size * 0.01);
+    canvas.width = size + 2 * borderSize;
+    canvas.height = size + 2 * borderSize;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, borderSize, borderSize);
+    const dataUrl = canvas.toDataURL('image/png');
+    chrome.downloads.download({
+      url: dataUrl,
+      filename: 'qrcode.png'
+    });
+  };
+  img.src = svgUrl;
+});
 
   saveSVGButton.addEventListener('click', function() {
     if (!qr) return;
-    const svg = generateQRCodeSVG(qr._oQRCode.modules);
-    const blob = new Blob([svg], {type: 'image/svg+xml'});
+    const svgString = qr.createSvgTag(5);
+    const blob = new Blob([svgString], {type: 'image/svg+xml'});
     const url = URL.createObjectURL(blob);
     chrome.downloads.download({
       url: url,
       filename: 'qrcode.svg'
     });
   });
-
-  function generateQRCodeSVG(modules) {
-    const moduleCount = modules.length;
-    const cellSize = 4; // Adjust this value to change the size of the QR code
-    const margin = 16; // Adjust this value to change the margin around the QR code
-    const size = moduleCount * cellSize + 2 * margin;
-
-    let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-      <rect width="100%" height="100%" fill="white"/>`;
-
-    for (let row = 0; row < moduleCount; row++) {
-      for (let col = 0; col < moduleCount; col++) {
-        if (modules[row][col]) {
-          const x = col * cellSize + margin;
-          const y = row * cellSize + margin;
-          svg += `<rect x="${x}" y="${y}" width="${cellSize}" height="${cellSize}" fill="black"/>`;
-        }
-      }
-    }
-
-    svg += '</svg>';
-    return svg;
-  }
 
   updateInputFields();
 });
