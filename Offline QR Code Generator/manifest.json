@@ -3,9 +3,12 @@
   "name": "Offline QR Code Generator",
   "version": "0.1",
   "description": "Generate and save QR codes with various data types",
-  "permissions": ["activeTab", "downloads"],
+  "permissions": ["activeTab", "downloads", "tabs"],
   "action": {
     "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
   },
   "icons": {
     "16": "favicon.png",

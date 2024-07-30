@@ -32,11 +32,35 @@ document.addEventListener('DOMContentLoaded', function() {
     `
   };
 
+  // Set default QR type to URL
+  dataTypeSelect.value = 'url';
+  updateInputFields();
+
+  // Auto-fill URL from current tab
+  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+    const currentUrl = tabs[0].url;
+    const inputData = document.getElementById('inputData');
+    if (inputData) {
+      inputData.value = currentUrl;
+    }
+  });
+
   dataTypeSelect.addEventListener('change', updateInputFields);
 
   function updateInputFields() {
     const dataType = dataTypeSelect.value;
     inputFields.innerHTML = inputTemplates[dataType];
+    
+    // If the data type is URL, try to auto-fill it
+    if (dataType === 'url') {
+      chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+        const currentUrl = tabs[0].url;
+        const inputData = document.getElementById('inputData');
+        if (inputData) {
+          inputData.value = currentUrl;
+        }
+      });
+    }
   }
 
   function validateInput(dataType) {
@@ -99,31 +123,31 @@ END:VCARD`;
     qrPreview.style.display = 'block';
   });
 
-savePNGButton.addEventListener('click', function() {
-  if (!qr) return;
-  const svgString = qr.createSvgTag(5);
-  const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
-  const svgUrl = URL.createObjectURL(svgBlob);
-  
-  const img = new Image();
-  img.onload = function() {
-    const canvas = document.createElement('canvas');
-    const size = img.width;
-    const borderSize = Math.floor(size * 0.01);
-    canvas.width = size + 2 * borderSize;
-    canvas.height = size + 2 * borderSize;
-    const ctx = canvas.getContext('2d');
-    ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(img, borderSize, borderSize);
-    const dataUrl = canvas.toDataURL('image/png');
-    chrome.downloads.download({
-      url: dataUrl,
-      filename: 'qrcode.png'
-    });
-  };
-  img.src = svgUrl;
-});
+  savePNGButton.addEventListener('click', function() {
+    if (!qr) return;
+    const svgString = qr.createSvgTag(5);
+    const svgBlob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+    const svgUrl = URL.createObjectURL(svgBlob);
+    
+    const img = new Image();
+    img.onload = function() {
+      const canvas = document.createElement('canvas');
+      const size = img.width;
+      const borderSize = Math.floor(size * 0.01);
+      canvas.width = size + 2 * borderSize;
+      canvas.height = size + 2 * borderSize;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, borderSize, borderSize);
+      const dataUrl = canvas.toDataURL('image/png');
+      chrome.downloads.download({
+        url: dataUrl,
+        filename: 'qrcode.png'
+      });
+    };
+    img.src = svgUrl;
+  });
 
   saveSVGButton.addEventListener('click', function() {
     if (!qr) return;
