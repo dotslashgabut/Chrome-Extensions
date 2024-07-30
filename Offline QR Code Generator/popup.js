@@ -94,10 +94,7 @@ END:VCARD`;
     qr.addData(qrData);
     qr.make();
     
-    const cellSize = Math.floor((qrcodeDiv.offsetWidth - 20) / qr.getModuleCount());
-qrcodeDiv.innerHTML = qr.createImgTag(cellSize);
-    
-    qrcodeDiv.innerHTML = qr.createImgTag(3);
+    qrcodeDiv.innerHTML = qr.createImgTag(5);
 
     qrPreview.style.display = 'block';
   });
@@ -130,7 +127,7 @@ savePNGButton.addEventListener('click', function() {
 
   saveSVGButton.addEventListener('click', function() {
     if (!qr) return;
-    const svgString = qr.createSvgTag(5);
+    const svgString = qr.createSvgTag(3);
     const blob = new Blob([svgString], {type: 'image/svg+xml'});
     const url = URL.createObjectURL(blob);
     chrome.downloads.download({
