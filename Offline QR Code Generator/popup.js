@@ -114,7 +114,7 @@ END:VCARD`;
     const qrData = getQRData(dataType);
 
     qrcodeDiv.innerHTML = '';
-    qr = qrcode(0, 'L');
+    qr = qrcode(0, 'M');
     qr.addData(qrData);
     qr.make();
     
