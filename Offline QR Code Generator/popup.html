@@ -17,8 +17,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     h1 {
-      font-size: 1.5em;
-      margin-top: 4px;
+      font-size: 1.4em;
       margin-bottom: 20px;
       color: #2c3e50;
       text-align: center;
@@ -63,6 +62,7 @@
       display: none;
       margin-top: 10px;
       text-align: center;
+      transition: opacity 0.3s ease-in-out;
     }
     #qrcode {
       display: inline-block;
@@ -71,13 +71,15 @@
       background-color: white;
       border-radius: 4px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 220px;  /* Fixed width */
+      height: 220px; /* Fixed height */
     }
     #qrcode img {
       display: block;
       margin: 0 auto;
       width: 100%;
-      min-width: 220px;
-      height: auto;
+      height: 100%;
+      object-fit: contain;
     }
     .download-buttons {
       display: flex;

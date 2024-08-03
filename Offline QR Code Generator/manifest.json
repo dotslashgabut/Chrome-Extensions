@@ -1,21 +1,24 @@
+// manifest.json
 {
   "manifest_version": 3,
   "name": "Offline QR Code Generator",
-  "version": "0.1",
+  "version": "0.1.1",
   "description": "Generate and save QR codes with various data types",
-  "permissions": ["activeTab", "downloads", "tabs"],
+  "permissions": ["activeTab", "downloads", "tabs", "storage"],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "favicon_16.png",
+      "48": "favicon_48.png",
+      "128": "favicon_128.png"
+    }
   },
   "background": {
     "service_worker": "background.js"
   },
   "icons": {
-    "16": "favicon.png",
-    "48": "favicon.png",
-    "128": "favicon.png"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
+    "16": "favicon_16.png",
+    "48": "favicon_48.png",
+    "128": "favicon_128.png"
   }
 }
