@@ -172,7 +172,7 @@ END:VCARD`;
     img.onload = function() {
       const canvas = document.createElement('canvas');
       const size = img.width;
-      const borderSize = Math.floor(size * 0.1);
+      const borderSize = Math.floor(size * 0.04);
       canvas.width = size + 2 * borderSize;
       canvas.height = size + 2 * borderSize;
       const ctx = canvas.getContext('2d');
